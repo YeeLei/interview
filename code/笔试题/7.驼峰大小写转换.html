@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+<script>
+  /*
+    将下划线风格的变量转化为驼峰风格，如：输入 alipay_first_quiz 返回 alipayFirstQuiz
+    // 注：下划线只会出现在单词中间，不会出现在开头或者结尾
+  */
+
+  function snake2cnamel(str) {
+    // todo
+    if (
+      typeof str === 'undefined' ||
+      str === '' ||
+      Object.prototype.toString.call(str) === '[object Null]'
+    ) {
+      return ''
+    } else {
+      let arr = str.split('_')
+      let newStr = ''
+      arr.forEach((item, index) => {
+        if (index === 0) {
+          newStr += item
+        } else {
+          let arr = item.split('')
+          newStr += arr[0].toUpperCase()
+          newStr += arr.slice(1).join('')
+        }
+      })
+      return newStr
+    }
+  }
+  console.log(typeof snake2cnamel(''))
+  console.log(snake2cnamel(''))
+  console.log(snake2cnamel(undefined))
+  console.log(snake2cnamel(null))
+  console.log(snake2cnamel())
+  console.log(snake2cnamel('alipay'))
+  console.log(snake2cnamel('alipay_first_quiz'))
+  console.log(snake2cnamel('aaaa_bb_ccc'))
+</script>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+<script>
+  // 闭包的this指向问题：
+  // var myNumber = {
+  //   value: 1,
+  //   add: function(i) {
+  //     var helper = function (i) {
+  //       console.log(this) // window 匿名函数里面的this指向的是window
+  //       this.value += i
+  //     }
+  //     helper(i)
+  //   }
+  // }
+  // myNumber.add(1)
+
+  // // 第一种解决方案：利用that保存this
+  // var myNumber = {
+  //   value: 1,
+  //   add: function(i) {
+  //     var that = this
+  //     var helper = function(i) {
+  //       console.log(that)
+  //       that.value += i
+  //     }
+  //     helper(i)
+  //   }
+  // }
+  // myNumber.add(1)
+
+  // 第二种解决方案：通过apply改变this的指向
+  // var myNumber = {
+  //   value: 1,
+  //   add: function (i) {
+  //     var helper = function (i) {
+  //       this.value += i
+  //       console.log(this.value)
+  //     }
+  //     helper.apply(this, [i])
+  //   },
+  // }
+  // myNumber.add(1)
+  // myNumber.add(1)
+
+  // 第三种解决方案：通过bind改变this的指向
+  var myNumber = {
+    value: 1,
+    add: function (i) {
+      var helper = function (i) {
+        this.value += i
+        console.log(this.value)
+      }.bind(this, i) // 使用bind绑定，和apply相似，只是它返回的是对函数的引用，不会立即执行
+      helper(i)
+    },
+  }
+  myNumber.add(1)
+  myNumber.add(1)
+</script>

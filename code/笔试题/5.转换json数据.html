@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+<script>
+  let input = '{"url":"MbB3213213","data":{"a":1,"b":[2,3]}}'
+  let input2 = '{url:1}'
+  function jsonParseSafely(json, defaultValue) {
+    try {
+      return 'JSON' in window ? JSON.parse(json) : eval('(' + json + ')')
+    } catch (err) {
+      return defaultValue || {}
+    }
+  }
+  // console.log(jsonParseSafely(input)) // {url: 'MbB3213213',data: {a:1,b:[2,3]}}
+  // console.log(jsonParseSafely(input2, { url: 2 })) // {url: 2}
+  console.log(jsonParseSafely(input2)) // {}
+</script>

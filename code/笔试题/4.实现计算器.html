@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+<script>
+  // 请使用原型链或者class实现计算器，能够链式加减乘除
+
+  // class方法
+  // class MyCaculator {
+  //   constructor(value) {
+  //     this.sum = value
+  //   }
+  //   add(v) {
+  //     this.sum += v
+  //     return this
+  //   }
+  //   minus(v) {
+  //     this.sum -= v
+  //     return this
+  //   }
+  //   multi(v) {
+  //     this.sum *= v
+  //     return this
+  //   }
+  //   div(v) {
+  //     this.sum /= v
+  //     return this
+  //   }
+  //   pow(v) {
+  //     this.sum %= v
+  //     return this
+  //   }
+  // }
+
+  // console.log(new MyCaculator(2).add(1).minus(2).multi(3).div(4).pow(2).add(1))
+
+  // 原型链方法
+  function MyCaculator(sum) {
+    this.sum = sum
+  }
+  MyCaculator.prototype = {
+    add(value) {
+      this.sum += value
+      return this
+    },
+    minus(value) {
+      this.sum -= value
+      return this
+    },
+    multi(value) {
+      this.sum *= value
+      return this
+    },
+    div(value) {
+      this.sum /= value
+      return this
+    },
+    pow(value) {
+      this.sum %= value
+      return this
+    },
+  }
+  console.log(new MyCaculator(2).add(1).minus(2).multi(3).div(4).pow(2))
+</script>
