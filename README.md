@@ -477,3 +477,195 @@ rgba()和 opacity 都能实现透明效果，但最大的不同是opacity作用�
 * Sass无全局变量的概念,Less和Stylus有类似于其它语言的作用域概念
 
 * Sass是基于Ruby语言的，而Less和Stylus可以基于NodeJS NPM下载相应库后进行编译
+
+## 2、JavaScript
+
+### 2.1  js的数据类型有哪些？
+
+* 基本数据类型（5种）string,number,null,undefined,boolean
+* 复杂数据类型（1种）Object,Function,Array
+* es6新增（1种基本数据类型）symbol
+* es11新增（1种基本数据类型）BigInt
+
+### 2.2 js的变量声明方式
+
+* var 
+* let 
+* const
+* function
+* import
+* class
+
+### 2.3 let、const、var 的区别？
+
+* let 和const是es6新增的声明类型
+* let用于声明变量，const用于声明常量（如果是一个对象，只改变里面的一个属性，最好也是用const）
+* let和const都有块级作用域，不具备变量提升（会有暂时性死区），不能重复声明
+* var的作用域是全局性的，存在变量提升，可以前置访问，可以重复声明 
+
+#### 2.4 **如何判断一个变量的类型，以及**typeof**和**instanceof的区别？
+
+* typeof 和instanceof常用来判断一个变量是否为空，或者是什么类型
+
+* typeof的返回值是一个字符串，用来说明变量的数据类型
+
+* typeof一般只能返回如下几个结果：number,boolean,string,function,object,undefined
+
+  其中对象、数组、null以及window、document的值都是object
+
+* instanceof的返回值是布尔值
+* instanceof用于判断一个变量是否属于某个对象的实例
+
+#### 2.5 用过哪些数组排序的方法
+
+**冒泡排序**
+
+```javascript
+// 冒泡排序: 比较两个相邻的项，如果第一个大于第二个则交换他们的位置,元素项向上移动至正确的顺序，就好像气泡往上冒一样
+function bubbleSort(arr) {
+  let len = arr.length
+  for(let i=0;i<len-1;i++) {
+    for(let j=0;j<len-1-i;j++) {
+      if(arr[j]>arr[j+1]) {
+        arr[j] = arr[j]^arr[j+1]
+        arr[j+1] = arr[j]^arr[j+1]
+        arr[j] = arr[j]^arr[j+1]
+      }
+    }
+  }
+  return arr
+}
+```
+
+**快速排序**
+
+```javascript
+/*
+	1、首先，在数组中选择一个中间项作为基数
+	2、准备两个数组容器，遍历数组，逐个与基数比对，较小的放左边容器，较大的放右边容器
+	3、进行相同的操作，直到数组中只有一个元素时，返回该数组
+*/
+function quickSort(arr) {
+  	let len = arr.length
+    if (len <= 1) {
+      // 基点
+      return arr
+    } else {
+      // 中间索引
+      let midIndex = parseInt(arr.length / 2)
+      // 中间值
+      let midValue = arr[midIndex]
+      // 定义两个数组用于分别存放比中间值小/大的值
+      let left = [],right = []
+      for (let i = 0; i < len; i++) {
+        if (arr[i] < midValue) {
+          // 存放到左边数组
+          left.push(arr[i])
+        } else if (arr[i] > midValue) {
+          // 排序+去重
+          right.push(arr[i])
+        }
+      }
+      return quickSort(left).concat(midValue, quickSort(right))
+    }
+ }
+```
+
+**选择排序**
+
+```javascript
+/*
+	（1）在未排序序列中找到最小（大）元素
+	（2）并存放到排序序列的起始位置
+	（3）然后，再从剩余未排序元素中继续寻找最小（大）元素
+	（4）然后放到已排序序列的末尾。
+	（5）以此类推
+*/
+function selectionSort(arr) {
+  let len = arr.length
+  let minIndex
+  for(let i=0;i<len-1;i++) {
+    minIndex = i
+    for(let j=i+1;j<len;j++) {
+      if (arr[j]<arr[minIndex]) {
+        minIndex = j
+      }
+    }
+    [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]]
+  }
+  return arr
+}
+```
+
+**插入排序**
+
+```javascript
+/*
+	（1）从第一个元素开始，该元素可以认为已经被排序
+	（2）取出下一个元素，在已经排序的元素序列中扫描
+	（3）如果该元素（已排序）大于新元素，将该元素移到下一位置
+	（4）重复步骤3，直到找到已排序的元素小于或者等于新元素的位置
+	（5）将新元素插入到下一位置中
+	（6）重复步骤2
+*/
+function insertionSort(arr) {
+  let len = arr.length
+  for(let i=1;i<len;i++) {
+    let temp = arr[i]
+    let j = i
+    while(j>0) {
+      if (temp<arr[j-1]) {
+        arr[j] = arr[j-1]
+      } else {
+        break
+      }
+      j--
+    }
+    arr[j] = temp
+  }
+  return arr
+}
+```
+
+**归并排序**
+
+```javascript
+/* 
+	Mozilla Firefox 使用归并排序作为Array.prototype.sort的实现，而chrome使用快速排序的一个变体实现的,前面三种算法性能不好，但归并排序性能不错 算法复杂度O(nlog^n)
+  归并排序是一种分治算法。
+  1、将序列分成两个长度为n/2的子序列
+	2、再将每个子序列分成两个m/2个子序列，直到长度为1
+	3、将两个排序好的子序列合并成一个新序列，得到最终序列
+
+*/
+function mergeSort(arr) {
+  const len = arr.length
+  // 序列长度为1时退出
+  if (len < 2) {
+    return arr
+  }
+  // 将序列分为两个子序列，这一块用到“分治法”中的“分割”
+  const middle = Math.floor(len/2)
+  const left = arr.slice(0,middle)
+  const right = arr.slice(middle)
+  // 递归，这一块用到“分治法”中的“集成（合并）”
+  return merge(mergeSort(left),mergeSort(right))
+}
+
+function merge(left,right) {
+	const result = []
+  // 两个子序列进行比较，从小到大放入新的序列result中
+  while(left.length && right.length) {
+    // 将较小的放入result,并改变left或者right的长度，灵活使用shift方法
+    if (left[0]<=right[0]) {
+      result.push(left.shift())
+    } else {
+      result.push(right.shift())
+    }
+  }
+  result.push(...left)
+  result.push(...right)
+  return result
+}
+```
+
