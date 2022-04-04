@@ -172,7 +172,7 @@
 * table-cell: rd的默认值
 * inherit: 继承
 
-#### 2.4 **介绍一下**em**，**rem**，**vw, vh, vmax, vmin？
+#### 2.4 **介绍一下**em,rem,vw, vh, vmax, vmin？
 
 * em: em是相对⻓度单位。相对于当前元素内文本的字体尺寸
 * rem: rem是CSS3新增的一个相对单位，相对的是HTML根元素的字体大小。除了IE8及更早版本外，所有浏览 器均已支持rem。
@@ -195,5 +195,285 @@
 
 #### 2.6 **浏览器的渲染原理**
 
+1. 浏览器将获取的HTML文档解析成DOM Tree (DOM树)
+2. 将CSS样式表解析成CSSOM Tree(CSS树)
+3. 将DOM和CSSOM合并为渲染树(redering tree),这个过程被称为attachment
+4. 渲染树的每个元素经过精确的计算，给出坐标，这个过程称为layout
+5. 将渲染树的各个节点绘制到屏幕上，这个过程称为painting
 
+   ![image-20220404084823116](/Users/yefanglei/interview/images/image-20220404084823116.png)
 
+#### 2.7 **从浏览器地址栏输入**url**到显示⻚面的步骤**?
+
+1. 浏览器根据请求的URL交给DNS域名解析，找到真实的ip地址向服务器发起请求。
+2. 服务器交给后台处理完成后返回数据，浏览器接受文件（HTML,CSS,JS,图像等）。
+3. 浏览器对加载的资源进行语法解析，建立相应的内部数据结构。
+4. 载入解析到的资源文件，渲染页面，完成。
+
+#### 2.8 CSS3新增了哪些内容？
+
+* 过渡 transition: CSS属性（默认all）花费时间  效果曲线（默认ease）延迟时间（默认0）
+
+* 动画 animation: 动画名称  一个周期花费时间  运动曲线（默认ease）动画延迟（默认0）播放次数（默认1）是否反向播放动画（默认normal）是否暂停动画（默认running）
+
+* 形状转换 transform: 适用于2d或3d转换的元素
+
+  rotate(30deg); translate(30px,30px); scale(.8);skew(10deg,10deg); rotateX(180deg);rotateY(180deg); rotate3d(10,10,10,90deg);
+
+* 选择器
+
+  1. 属性选择器
+
+  2. 结构性伪类选择器
+
+     `:root` 等同于html; `:not`(否定选择器); `:empty`选择器表示的就是空。`:target`目标选择器，用来匹配文档(页面)的url的某个标志符的目标元素。`:first-child`表示的是选择父元素的第一个子元素的元素E。简单点理解就是选择元素中的第一个子元素，记住是子元素，而不是后代元素。`first-of-type`匹配的是父元素下相同类型子元素中的第一个，比如 p:first-of-type，就是指所有类型为p的子元素中的第一个。这里不再限制是第一个子元素了，只要是该类型元素的第一个就行了。
+
+  3. enabled和:disabled选择器
+
+  4. checked选择器
+
+  5. ::selection选择器
+
+  6. ::before和::after伪元素选择器
+
+* 阴影 box-shadow: 水平阴影的位置 垂直阴影的位置 模糊距离 阴影大小 阴影颜色 阴影开始方向（默认从里向外，设置inset就是从外到里）
+
+* 边框 border-image: 图片url 图像边界向内偏移 图像边界的宽度(默认为边框的宽度) 用于指定在边框外部绘 制偏移的量(默认0) 铺满方式--重复(repeat)、拉伸(stretch)或铺满(round)(默认:拉伸 (stretch))
+
+* 背景 background-clip(制定背景绘制(显示)区域) background-origin background-size
+
+  background-clip: border-box; 默认情况(从边框开始绘制)
+
+  background-clip: padding-box; 从padding开始绘制(显示)，不算border,，相当于把border那里的背景给裁剪掉
+
+  background-clip: content-box;只在内容区绘制(显示)，不算padding和border，相当于把padding和 border那里的背景给裁剪掉
+
+* 反射 -webkit-box-reflect:方向[ above-上 | below-下 | right-右 | left-左 ]，偏移量，遮罩图片
+
+* 文字 word-break: normal|break-all|keep-all; 
+
+​		换行 word-wrap: normal|break-word;
+
+​		超出省略号 text-overflow:clip|ellipsis|string;
+
+​		文字阴影 text-shadow:水平阴影，垂直阴影，模糊的距离，以及阴影的颜色。
+
+* 颜色 rgba(rgb为颜色值，a为透明度) color: rgba(255,00,00,1);background: rgba(00,00,00,.5); hsla h:色 相”，“s:饱和度”，“l:亮度”，“a:透明度” color: hsla( 112, 72%, 33%, 0.68);background-color: hsla( 49, 65%, 60%, 0.68);
+* 渐变 
+* Filter(滤镜):黑白色filter: grayscale(100%)、褐色filter:sepia(1)、饱和度saturate(2)、色相旋转hue- rotate(90deg)、反色filter:invert(1)、透明度opacity(.5)、亮度brightness(.5)、对比度contrast(2)、模糊 blur(3px)
+* 弹性布局 flex
+* 网格布局 grid
+
+* 多列布局
+
+* 盒模型定义 
+
+  box-sizing:border-box的时候，边框和padding包含在元素的宽高之内
+
+  box- sizing:content-box的时候，边框和padding不包含在元素的宽高之内
+
+* 媒体查询: 就是监听屏幕尺寸的变化，在不同尺寸的时候显示不同的样式!在做响应式的网站里面，是必不可少的一环
+
+#### 2.9 过渡和动画的区别？
+
+* 过渡需要用户手动触发，而动画不需要
+* 过渡不能控制中间过程，动画可以
+* 过渡只能执行一次，动画可以执行任意次
+
+#### 2.10 什么是回流和重绘？
+
+**什么是回流？**
+
+> 通过构造render tree,我们可以将DOM节点以及它对应的样式结合起来，可是我们还需要计算它们的设备视口（viewport）内的确切位置和大小，这个计算的阶段就叫回流。
+>
+> 当render tree 中的一部分（或全部）因为元素的规模尺寸，布局，隐藏等改变而需要重新构建时，这就称为回流（reflow）。每个页面至少有一次回流，就是页面在第一次加载的时候，这时候一定会发生回流，因为要构建render tree。
+
+**什么是重绘？**
+
+> 当render tree 中的一些元素需要更新属性时，而这些属性只是影响元素的外观、风格而不会影响布局的时候，比如：background-color、文字颜色、边框颜色等，则称为重绘。
+
+**区别**
+
+> 回流必定会发生重绘，而重绘不一定发生回流。回流所需要花费的成本比重绘高很多，改变父节点里的子节点很可能会导致父节点的一系列发生回流。
+
+**何时会发生回流？**
+
+* 页面第一次渲染
+* 添加或删除可见的DOM元素时
+* 元素的位置发生变化
+* 元素的尺寸发生变化（包括外边距、内边距、边框大小、高度和宽度等）
+* 内容发生变化 比如：文本变化或图片被另一个不同的尺寸的图片所替代或者字体改变
+* 浏览器窗口尺寸的变化（因为回流是根据视口的大小来计算元素的位置和大小的）
+* 定位或者浮动，盒模型等
+* 获取元素的某些属性
+
+**如何减少重绘和回流？**
+
+* 使用tranform做形变和位移来替代定位top
+* 使用visibility替代display: none;因为前者只会引起重绘，而后者会发生回流
+* 不要使用table布局，可能很小的一个改变会造成整个table的重新布局
+* 动画实现的速度选择，动画速度越快，回流的次数越多，也可以选择使用requestAnimationFrame
+* CSS选择器会从右往左匹配查找，因此需要避免层级过多
+* 将频繁重绘或回流的节点设置为图层，图层能够阻止该节点渲染行为影响别的节点。比如video标签，浏览器 会自动将该节点变为图层
+* 避免多次读取某些属性
+* 合并多次对DOM和样式的修改，然后一次处理掉
+
+#### 2.11  弹性盒（flex）
+
+**父元素**
+
+```css
+display:
+- flex-direction:设置主轴方向
+- justify-content:设置主轴对⻬方式
+- align-items:设置侧轴对⻬方式
+- flex-wrap 设置是否换行
+- align-content : 行与行之间的排列方式
+```
+
+**子元素**
+
+```css
+- align-self: 设置单独在侧轴对⻬方式 - order: 设置排列顺序
+- flex-grow: 放大比例
+- flex-shrink: 缩小比例
+- flex-basis: 分配剩余空间前占据的位置
+- flex: flex-grow,flex-shrink,flex-basis的缩写
+```
+
+#### 2.12 盒模型有几种?
+
+* 标准盒模型:margin，border，padding，content
+
+​		宽 = 左右border + 左右margin + 左有padding + width
+
+* 怪异盒模型（IE盒模型）:border和padding算在宽高的里面
+
+​		宽 = width
+
+#### 2.13 移动端适配怎么做？
+
+1. 可以使用手机淘宝之前的方案 flexible.js插件
+2. 使用less或者sass等css预编译的mixin混合计算，带参数进行自动计算
+3. 使用最新的postcss的postcss-pxtorem插件和lib-flexible插件
+4. 使用rem+vw进行布局
+
+#### 2.14 rgba()**和** opacity 的透明效果有什么不同?
+
+rgba()和 opacity 都能实现透明效果，但最大的不同是opacity作用于元素，以及元素的所有内容的透明度，而rgba()只作用于元素的颜色或其背景色。(设置 rgba 透明的元素的子元素不会继承透明效果!)
+
+#### 2.15 什么是BFC？
+
+> BFC: block formatting context(块状格式化上下文)
+>
+> bfc是一个独立的空间，只有块状元素参与， 它规定了里面的块状元素如何布局，它和外部的环境毫不相干。
+
+**触发条件**
+
+```css
+1. 根元素(html)本身就是一个BFC
+2. float不能none的时候
+3. position为absolute或者fixed的时候
+4. display为inline-block, table-cell, flex, inline-flex等 
+5. overflow不为visible的时候
+```
+
+**特点**
+
+```css
+1.bfc区域的元素从上到下一次排列
+2.相邻的上下元素垂直方向的距离由margin控制，具体以margin值大的为准
+3.bfc区域里面的元素的margin-left与bfc区域的border-left相接触
+4.bfc区域与外界毫不相干
+5.bfc区域不会与float元素相重叠
+6.计算bfc区域,浮动元素参与计算
+```
+
+#### 2.16 CSS中哪些属性可以继承?
+
+* 字体系列属性
+
+  font-family:字体系列
+
+  font-weight:字体的粗细
+
+  font-size:字体的大小
+
+  font-style:字体的⻛格
+
+* 文本系列属性
+
+  text-indent:文本缩进
+
+  text-align:文本水平对⻬
+
+  line-height:行高
+
+  word-spacing:单词之间的间距
+
+  letter-spacing:中文或者字母之间的间距
+
+  text-transform:控制文本大小写(就是uppercase、lowercase、capitalize这三个) 
+
+  color:文本颜色
+
+* 元素可⻅性
+
+  visibility:控制元素显示隐藏
+
+* 列表布局属性
+
+  list-style:列表⻛格，包括list-style-type、list-style-image等
+
+* 光标属性
+
+  cursor:光标显示为何种形态
+
+#### 2.17 行内元素和块级元素的区别？
+
+1. 行内元素会在一条直线上排列（默认宽度只与内容有关），都是同一行的，水平方向排列。块级元素各占据一行（默认宽度是它本身父容器的100%（和父元素的宽度一致），与内容无关），垂直方向排列。
+2. 块级元素可以包含行内元素和块级元素。行内元素不能包含块级元素，只能包含文本或者其它行内元素。
+3. 行内元素设置width无效，height无效(可以设置line-height)，margin上下无效，padding上下无效
+
+#### 2.18 CSS权重
+
+!important>行内样式>id>class|属性>标签选择器>通配符
+
+包含选择器的权重等于每一级选择器的权重之和
+
+#### 2.19 CSS选择器有哪些？
+
+* 通配符
+* id选择器
+* class选择器
+* 元素选择器
+* 后代选择器
+* 层级选择器
+* 属性选择器
+* 兄弟选择器
+* 结构选择器
+  * 结构伪类
+  * 目标伪类
+  * ui状态伪类
+  * 动态伪类
+  * 否定伪类
+* 等
+
+#### 2.19 如何清除图片之间的间隙？
+
+* 清除图片左右的间隙
+  1. 图片挨着写（中间没有空格，也没有回车）
+  2. 将图片的父元素的font-size设置为0
+  3. 给图片加浮动
+* 清除图片的上下边距
+  1. 将图片设置成display: block
+  2. 给图片设置vertical-align: top/middle/bottom
+
+#### 2.20 stylus/sass/less区别?
+
+* 均具有“变量”、“混合”、“嵌套”、“继承”、“颜色混合”五大基本特性
+* Sass和Less语法较为严谨，Less要求一定要使用花括号“{}”，Scss和Stylus可以通过缩进表示层次与嵌套关系
+
+* Sass无全局变量的概念,Less和Stylus有类似于其它语言的作用域概念
+
+* Sass是基于Ruby语言的，而Less和Stylus可以基于NodeJS NPM下载相应库后进行编译
