@@ -1,3 +1,7 @@
+---
+typora-copy-images-to: ./images
+---
+
 # 面试题(基础)
 ## 1、html
 
@@ -667,5 +671,207 @@ function merge(left,right) {
   result.push(...right)
   return result
 }
+```
+
+#### 2.6 类型转换
+
+**转Boolean**
+
+```javascript
+在条件判断时，除了 undefined， null， false， NaN， ''， 0， -0，其他所有值都转为 true，包括所有对象。
+```
+
+**对象转基本类型**
+
+```javascript
+ 对象在转换基本类型时，首先会调用 valueOf 然后调用 toString。并且这两个方法你是可以重写的。
+ let a = {
+   valueOf() {
+     return 0
+   }
+ }
+ 当然你也可以重写 Symbol.toPrimitive ，该方法在转基本类型时调用优先级最高。
+ let a = {
+   valueOf() {
+     return 0
+   }
+   toString() {
+     return 1
+   }
+	 [Symbol.toPrimitive]() {
+     return 2
+   }
+ }
+ console.log(1+a) // 3
+ console.log('1'+a) // '12'
+```
+
+**四则运算符**
+
+```javascript
+只有当加法运算时，其中一方是字符串类型，就会把另一个也转为字符串类型。其他运算只要其中一方是数字，那么另
+一方就转为数字。并且加法运算会触发三种类型转换:将值转换为原始值，转换为数字，转换为字符串。
+1 + '1' // '11'
+2 * '2' // 4
+[1, 2] + [2, 1] // '1,22,1'
+// [1, 2].toString() -> '1,2'
+// [2, 1].toString() -> '2,1'
+// '1,2' + '2,1' = '1,22,1' 
+
+// 对于加号需要注意这个表达式 'a' + + 'b'
+'a' + + 'b' // -> "aNaN"
+// 因为 +'b'->NaN
+// 你也许在一些代码中看到过 + '1' -> 1
+```
+
+**== 操作符**
+
+```javascript
+ 
+比较运算x==y，其中x和y是值，产生true或者false。这样的比较按如下方式进行:
+1.若Type(x)与Type(y)相同，则 
+	a.若Type(x)为Undefined,返回true。 
+	b.若Type(x)为Null，返回true。 
+  c.若Type(x)为Number，则
+		i.若x为NaN,返回false。 
+			ii.若y为NaN,返回false。
+		ili.若x与y为相等数值，返回true。 
+			iv.若x为+0且y为-0，返回true。 
+      	v.若x为-O且y为+0，返回true。
+			vi.返回false。 
+	d.若Type(x)为String，则当x和y为完全相同的字符序列(⻓度相等且相同字符在相同位置)时返回true。否则返
+回false。 
+	e.若Type(x)为Boolean，当x和y为同为true或者同为false时返回true。否则返回false。
+  f.当x和y为引用同一对象时返回true。否则返回false。
+2.若x为null且y为undefined，返回true。
+3.若x为undefined且y为null，返回true。
+4.若Type(x)为 Number且 Type(y)为String，返回comparison x == ToNumber(y)的结果。 
+5.若Type(x)为String 且 Type(y)为Number,
+6.返回比较ToNumber(x)== y的结果。
+7.若Type(x)为Boolean,返回比较ToNumber(x)== y的结果。
+8.若Type(y)为Boolean,返回比较x == ToNumber(y)的结果。
+9.若Type(x)为String或Number，且Type(y)为Object，返回比较x == ToPrimitive(y)的结果。 
+10.若Type(x)为Object且Type(y)为String或Number，返回比较ToPrimitive(x)== y的结果。 11.返回false。
+ 	
+```
+
+#### 2.7 原型
+
+* 每个函数都有prototype属性，除了Function.prototype.bind(),该属性指向原型
+* 每个对象都有__proto__属性，指向创建该对象的构造函数的原型。其实这个属性指向了[[prototype]],但是[[prototype]]是内部属性，我们并不能访问到，所以使用__proto__来访问
+
+* 对象通过__proto__来寻找不属于该对象的属性或方法，__proto__将对象连接起来组成了原型链
+
+#### 2.8 什么是原型链？
+
+原型链：当访问一个对象的某个属性时，首先会从该对象的自己属性中查找，如果没有找到，就会从它的__proto__隐式原型上查找，即它的构造函数的原型prototype，如果还没有找到，就会去构造函数的prototype的__proto__中查找，这样一层一层的往上就会形成一条链式结构，我们称为原型链。
+
+![image-20220404084823116](images/image-20220404084823116.png)
+
+#### 2.9 new的过程做了什么？
+
+1. 新生成了一个对象
+2. 链接到原型上
+3. 绑定this
+4. 返回新对象
+
+#### 2.10 this
+
+1. 普通函数的this指向调用这个函数的对象，默认是window
+2. 构造函数的this指向new出来的这个对象，而且优先级是最高的，不能被改变
+3. 箭头函数的this指向的是它外面的第一个不是箭头函数的this，在定义时就确定了，不能被改变
+4. 事件处理函数的this指向事件对象
+
+#### 2.11 call, apply, bind 区别？
+
+* call 和 apply 都是为了解决改变 this 的指向。作用都是相同的，只是传参的方式不同。
+
+* 除了第一个参数外，call 可以接收一个参数列表，apply 只接受一个参数数组。
+* bind 和其他两个方法作用也是一致的，只是该方法会返回一个函数。并且我们可以通过 bind 实现柯里化。
+
+#### 2.12 闭包
+
+**闭包的定义：**当一个内部函数被调用就会形成闭包，闭包就是能够读取其他函数内部变量的函数。
+
+**闭包的作用：**
+
+1. 在外部访问函数内部的变量
+2. 让函数内部的局部变量可以一直保存下去
+
+**闭包的缺点：**占用内存空间，大量的使用闭包可能会造成栈溢出
+
+**闭包的优化：**由于闭包会一直占用内存，知道页面销毁，可以主动将已使用的闭包进行销毁，将闭包函数赋值为null
+
+#### 2.13 深浅拷⻉
+
+```javascript
+let a = { 
+  age: 1
+}
+let b = a
+a.age = 2
+console.log(b.age) // 2
+```
+
+从上述例子中我们可以发现，如果给一个变量赋值一个对象，那么两者的值会是同一个引用，其中一方改变，另
+
+一方也会相应改变。通常在开发中我们不希望出现这样的问题，我们可以使用浅拷⻉来解决这个问题。
+
+**浅拷贝**
+
+```javascript
+// 1.使用Object.assign()
+let a = {
+  age: 18
+}
+let b = Object.assign({},a)
+a.age = 20
+console.log(b.age) // 18
+
+// 2.展开运算符
+let a = {
+  age: 18
+}
+let b = {...a}
+a.age = 20
+console.log(b.age) // 18
+```
+
+通常浅拷⻉就能解决大部分问题了，但是当我们遇到如下情况就需要使用到深拷⻉了
+
+```javascript
+let a = {
+  age: 18,
+  jobs: {
+    first: 'YE'
+  }
+}
+let b = {...a}
+a.jobs.first = 'native'
+console.log(b.jobs.first) // native
+// 浅拷⻉只解决了第一层的问题，如果接下去的值中还有对象的话，那么就又回到刚开始的话题了，两者享有相同的引用。要解决这个问题，我们需要引入深拷⻉
+```
+
+**深拷贝**
+
+```javascript
+let a = {
+  age: 18,
+  jobs: {
+    first: 'YE'
+  }
+}
+let b = JSON.parse(JSON.stringify(a))
+a.jobs.first = 'native'
+console.log(b.jobs.first) // YE
+/*
+	但是该方法也是有局限性的:
+		- 会忽略 undefined
+    - 会忽略 symbol
+    - 不能序列化函数
+    - 不能解决循环引用的对象
+  如果遇到这些情况，可以使用递归或者 lodash 的深拷⻉函数
+*/
+
 ```
 
