@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+<script>
+  let isHappy = function (n) {
+    let slow = n
+    let fast = getNext(n)
+    while (fast !== 1 && fast !== slow) {
+      slow = getNext(slow)
+      fast = getNext(getNext(fast))
+    }
+    return fast === 1
+  }
+  let getNext = function (n) {
+    return n
+      .toString()
+      .split('')
+      .map((i) => i ** 2)
+      .reduce((a, b) => a + b)
+  }
+  console.log(isHappy(19))
+</script>

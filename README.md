@@ -1,7 +1,3 @@
----
-typora-copy-images-to: ./images
----
-
 # 面试题(基础)
 ## 1、html
 
@@ -766,8 +762,6 @@ function merge(left,right) {
 
 原型链：当访问一个对象的某个属性时，首先会从该对象的自己属性中查找，如果没有找到，就会从它的__proto__隐式原型上查找，即它的构造函数的原型prototype，如果还没有找到，就会去构造函数的prototype的__proto__中查找，这样一层一层的往上就会形成一条链式结构，我们称为原型链。
 
-![image-20220404084823116](images/image-20220404084823116.png)
-
 #### 2.9 new的过程做了什么？
 
 1. 新生成了一个对象
@@ -874,4 +868,278 @@ console.log(b.jobs.first) // YE
 */
 
 ```
+
+#### 2.14 防抖
+
+防抖和节流的作用都是防止函数多次调用。区别在于，假设一个用户一直触发这个函数，且每次触发函数的间隔小于wait，防抖的情况下只会调用一次，而节流的情况会每隔一定时间(参数wait)调用函数。
+
+我们先来看一个袖珍版的防抖理解一下防抖的实现:
+
+```javascript
+const debounce = (func,wait=50)=> {
+	// 缓存一个定时器id
+  let timer = 0
+  // 这里返回的函数是每次用户实际调用的防抖函数
+  // 如果已经设定过定时器了就清空上一次的定时器
+  // 开始一个新的定时器，延迟执行用户传入的方法
+  return function(...args) {
+    if(timer) clearTimeout(timer)
+    timer = setTimeout(()=> {
+      func.apply(this,args)
+    },wait)
+  }
+}
+// 不难看出如果用户调用该函数的间隔小于wait的情况下，上一次的时间还未到就被清除了，并不会执行函数
+```
+
+这是一个简单版的防抖，但是有缺陷，这个防抖只能在最后调用。一般的防抖会有immediate选项，表示是否立 即调用。这两者的区别，举个栗子来说:
+
+* 例如在搜索引擎搜索问题的时候，我们当然是希望用户输入完最后一个字才调用查询接口，这个时候适用延迟 执行的防抖函数，它总是在一连串(间隔小于wait的)函数触发之后调用。 
+* 例如用户给interviewMap点star的时候，我们希望用户点第一下的时候就去调用接口，并且成功之后改变star 按钮的样子，用户就可以立⻢得到反馈是否star成功了，这个情况适用立即执行的防抖函数，它总是在第一次 调用，并且下一次调用必须与前一次调用的时间间隔大于wait才会触发。
+
+下面我们来实现一个带有立即执行选项的防抖函数
+
+```javascript
+/**
+* 防抖函数，返回函数连续调用时，空闲时间必须大于或等于 wait，func 才会执行 *
+* @param  {function} func
+* @param  {number}   wait
+* @param  {boolean}  immediate
+* @return {function}
+*/
+function debounce (func, wait = 50, immediate = true) {
+  let timer, context, args
+  // 延迟执行函数
+  const later = () => setTimeout(() => {
+    // 延迟函数执行完毕，清空缓存的定时器序号 timer = null
+    // 延迟执行的情况下，函数会在延迟函数中执行 // 使用到之前缓存的参数和上下文
+    if (!immediate) {
+      func.apply(context, args)
+      context = args = null
+    }
+  }, wait)
+	// 这里返回的函数是每次实际调用的函数 
+  return function(...params) {
+  // 如果没有创建延迟执行函数(later)，就创建一个 
+    if (!timer) {
+      timer = later()
+      // 如果是立即执行，调用函数 // 否则缓存参数和调用上下文
+    	if (immediate) {
+        func.apply(this, params)
+      } else {
+        context = this
+        args = params
+      }
+    // 如果已有延迟执行函数(later)，调用的时候清除原来的并重新设定一个 // 这样做延迟函数会重新计时
+    } else {
+      clearTimeout(timer)
+      timer = later()
+    }
+	}
+}
+```
+
+整体函数实现的不难，总结一下。
+
+* 对于按钮防点击来说的实现:如果函数是立即执行的，就立即调用，如果函数是延迟执行的，就缓存上下文和 参数，放到延迟函数中去执行。一旦我开始一个定时器，只要我定时器还在，你每次点击我都重新计时。一旦 你点累了，定时器时间到，定时器重置为 null，就可以再次点击了。
+* 对于延时执行函数来说的实现:清除定时器ID，如果是延迟调用就调用函数
+
+#### 2.15 节流
+
+防抖是将多次执行变为最后一次执行，节流是将多次执行变成每隔一段时间执行。
+
+```javascript
+function throttle(func,wait) {
+  let startTime = Date.now()
+  return function() {
+    let now = Date.now()
+    if(now - startTime >= wait) {
+      func.apply(this,args)
+      startTime = now
+    }
+  }
+}
+```
+
+#### 2.16 Promise
+
+Promise是ES6新增的语法，解决了回调地狱的问题。
+
+可以把Promise看成是一个状态机。初始状态为pending状态，可以通过函数resolve和reject，将状态转变为resolved或者rejected状态，状态一旦改变就不可以再次改变。
+
+then函数会返回一个Promise实例，并且该返回值是一个新的实例而不是之前的实例。因为Promise规范规定除了pending状态，其他状态都是不可变的，如果返回的是一个相同的实例的话，多个then调用就会失去意义了。
+
+Promise还拥有很多api:
+
+- then
+  - catch
+  - all
+  - race
+  - finally
+
+#### 2.17 async和await
+
+一个函数如果加上async，那么该函数就会返回一个Promise
+
+```javascript
+async function test() {
+  return '1'
+}
+console.log(test()) // Promise{<resolved>: '1'}
+```
+
+可以把async看成将函数返回值使用Promise.resolve()包裹了下。
+
+```javascript
+function sleep() {
+  return new Promise(resolve=> {
+    setTimeout(()=> {
+      console.log('finish')
+      resolve('sleep')
+    },2000)
+  })
+}
+async function test() {
+  let value = await sleep()
+  console.log('object')
+}
+test()
+```
+
+上面代码会先打印 finish 然后再打印 object 。因为 await 会等待 sleep 函数 resolve ，所以即使后面是同步代 码，也不会先去执行同步代码再来执行异步代码。
+
+sync 和 await 相比直接使用 Promise 来说，优势在于处理 then 的调用链，能够更清晰准确的写出代码。缺点 在于滥用 await 可能会导致性能问题，因为 await 会阻塞代码，也许之后的异步代码并不依赖于前者，但仍然需要 等待前者完成，导致代码失去了并发性。
+
+下面来看一个使用 await 的代码。
+
+```javascript
+var a = 0
+var b = asysc() => {
+  a = a + await 10
+  console.log('2',a) // '2' 10
+  a = (await 10) + a 
+  console.log('3',a) // '3' 20
+}
+b()
+a++
+console.log('1',a) // '1' 1
+```
+
+对于以上代码可能会有疑惑，这里说明下原理
+
+* 首先函数 b 先执行，在执行到 await 10 之前变量 a 还是 0，因为在 await 内部实现了 generators ， generators 会保留堆栈中东⻄，所以这时候 a = 0 被保存了下来
+
+* 因为 await 是异步操作，遇到await就会立即返回一个pending状态的Promise对象，暂时返回执行代码的控 制权，使得函数外的代码得以继续执行，所以会先执行 console.log('1', a) 
+* 这时候同步代码执行完毕，开始执行异步代码，将保存下来的值拿出来使用，这时候 a = 10 
+* 然后后面就是常规执行代码了
+
+#### 2.18 解构
+
+ES6允许按照一定模式，从数组和对象中提取值，对变量进行赋值，这被称为解构。
+
+举例：
+
+- let a = 1; let b = 2; [b, a] = [a, b];
+- import {Component} from 'react'
+- import {getTableData} from '../api.js'
+- getTableData().then(res => {let { data } = res})
+
+#### 2.19 箭头函数
+
+1. 写法简单
+
+```
+ 省略function关键字，如果只有一个参数可以省略小括号，代码块只有一条语句，可以省略大括号，省略大括号还有 自动return的作用，等等
+```
+
+2. this指向更加明确
+
+```
+箭头函数的this指向的是它外面的第一个不是箭头函数的函数的 this
+```
+
+#### 2.20 Set
+
+ES6 提供了新的数据结构 Set。它类似于数组，但是成员的值都是唯一的，没有重复的值，所以Set方法一般用来 数组去重
+
+```javascript
+let arr = [2, 3, 3, 4, 6, 5, 3, 4, 4];
+let arr2 = [...new Set(arr)];
+```
+
+这里new Set出来的不是真正的数组，所以需要用到...扩展运算符
+
+#### 2.21 高阶函数
+
+* forEach
+* map
+* some
+* every
+* filter
+* reduce
+
+#### 2.22 V8 下的垃圾回收机制
+
+V8 实现了准确式 GC，GC 算法采用了分代式垃圾回收机制。因此，V8 将内存(堆)分为新生代和老生代两部
+
+分。
+
+**新生代算法**
+
+```
+新生代中的对象一般存活时间较短，使用 Scavenge GC 算法。
+在新生代空间中，内存空间分为两部分，分别为 From 空间和 To 空间。在这两个空间中，必定有一个空间是使用 的，另一个空间是空闲的。新分配的对象会被放入 From 空间中，当 From 空间被占满时，新生代 GC 就会启动了。算法会检查 From 空间中存活的对象并复制到 To 空间中，如果有失活的对象就会销毁。当复制完成后将 From 空间 和 To 空间互换，这样 GC 就结束了。
+```
+
+**老生代算法**
+
+```
+老生代中的对象一般存活时间较⻓且数量也多，使用了两个算法，分别是标记清除算法和标记压缩算法。 在讲算法前，先来说下什么情况下对象会出现在老生代空间中:
+- 新生代中的对象是否已经经历过一次 Scavenge 算法，如果经历过的话，会将对象从新生代空间移到老生代空间 中。
+- To 空间的对象占比大小超过 25 %。在这种情况下，为了不影响到内存分配，会将对象从新生代空间移到老生代空 间中。
+在老生代中，以下情况会先启动标记清除算法: - 某一个空间没有分块的时候
+- 空间中被对象超过一定限制
+- 空间不能保证新生代中的对象移动到老生代中
+```
+
+#### 2.23 eventloop
+
+浏览器中js的执行流程和Node.js中流程都是基于事件循环的。
+
+首先为什么js是单线程？
+
+```
+js的单线程是与它的用途有关，作为浏览器脚本语言，js主要的用途是与用户交互、以及操作DOM。这就决定了它只能是单线程，否则会带来很复杂的同步问题。比如，假定JavaScript同时有两个线程，一个线程在某个DOM节点上添加内容，另一个线程删除了这个节点，这时浏览器应该以哪个线程为准？所以，为了避免复杂性，从一诞生，JavaScript就是单线程，这已经成了这门语言的核心特征，将来也不会改变。
+为了利用多核CPU的计算能力，HTML5提出Web Worker标准，允许JavaScript脚本创建多个线程，但是子线程完全受主线程控制，且不得操作DOM。所以，这个新标准并没有改变JavaScript单线程的本质。
+```
+
+什么是同步任务和异步任务？
+
+* 同步任务: 就是前一个任务执行完成后，再执行下一个任务，程序的执行顺序与任务的排列顺序是一致的、同步的；
+* 异步任务: 异步执行的任务，不进入主线程， 而是在异步任务有了结果后，将注册的回调函数放入任务队列中等待主线程空闲的时候读取执行。
+
+**js事件循环**：
+
+​	事件循环是指js执行环境中存在主执行线程和任务队列(Task Queue)，其中所有同步任务都在主执行线程中形成一个执行栈，所有的异步任务都会放到任务队列中。事件循环会经历如下过程：
+
+* 主线程执行同步任务，在主线程执行过程中，不断形成堆栈并执行出栈入栈操作
+* 主线程任务是否执行完毕，如否，继续循环第一步，如是，则进入下一步
+* 系统读取任务队列里的任务，进入执行栈，开始执行
+* 不断循环执行前三步
+
+在JavaScript中，除了广义的同步任务和异步任务，还可以细分，一种是宏任务（MacroTask）也叫Task，一种叫微任务（MicroTask）。
+
+每次单个**宏任务**执行完毕后， 检查**微任务**队列是否为空， 如果不为空，会按照**先入先出**的规则全部执行完**微任务**后， 清空微任务队列， 然后再执行下一个**宏任务**，如此循环。
+
+如何区分宏任务与微任务呢？
+
+* 宏任务：macrotask，又称为task, 可以理解为每次执行栈执行的代码就是一个宏任务（包括每次从事件队列中获取一个事件回调并放到执行栈中执行）。一般包括：script(可以理解为外层同步代码)、setTimeout、setInterval 、setImmediate、I/O操作
+
+* 微任务：microtask, 又称为job, 可以理解是在当前 task 执行结束后立即执行的任务。包括：Promise.then/cath /finally回调（平时常见的）、 MutationObserver回调（html5新特性）
+
+为什么要有微任务呢？
+
+因为事件队列其实是一个“先进先出”的数据结构，排在前面的事件会优先被主线程读取， 那如果突然来了一个优先级更高的任务，还让去人家排队，就很不理性化， 所以需要引入微任务。
+
+**在当前的微任务没有执行完成时，是不会执行下一个宏任务的。**
 
