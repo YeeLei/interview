@@ -314,7 +314,7 @@ window 对象含有 location 对象、navigator对象、screen对象等子对象
 
 原型链：当访问一个对象的某个属性时，首先会从该对象的自己属性中查找，如果没有找到，就会从它的__proto__隐式原型上查找，即它的构造函数的原型prototype，如果还没有找到，就会去构造函数的prototype的__proto__中查找，这样一层一层的往上就会形成一条链式结构，我们称为原型链。
 
-### 30.prototype**、**proto**、**constructor三者的关系
+### 30.prototype、proto、constructor三者的关系
 
 ![watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NzgyNDY2NA==,size_16,color_FFFFFF,t_70](images/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NzgyNDY2NA==,size_16,color_FFFFFF,t_70.png)
 
