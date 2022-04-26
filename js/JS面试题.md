@@ -70,7 +70,7 @@ js中现在有比较成熟的四种模块加载方案：
 它们主要区别有两方面：
 
 1. 在模块定义时对模块依赖处理不同。AMD推崇依赖前置，在模块定义的时候就要声明其依赖的模块。而CMD推崇就近依赖，只有在用到这个模块的时候再去require。
-2. 对依赖模块的执行时机不同。首先AMD和CMD对于模块的加载方式都是异步加载，不过它们的区别在于模块的执行时机，AMD在依赖模块加载完成时就直接执行依赖模块，依赖模块的执行顺序和我们书写的顺序不一定一致。而CMD在依赖模块加载完成后并不执行，等到下载完成后，所有依赖都加载好了，进入回调函数执行require，这样就保证了模块的执行顺序和我们书写的顺序一致。
+2. 对依赖模块的执行时机不同。首先AMD和CMD对于模块的加载方式都是异步加载，不过它们的区别在于模块的执行时机，AMD在依赖模块加载完成时就直接执行依赖模块，依赖模块的执行顺序和我们书写的顺序不一定一致。而CMD在依赖模块加载完成后并不执行，等到所有依赖都加载好了，才进入回调函数执行require，这样就保证了模块的执行顺序和我们书写的顺序一致。
 
 ### 7.ES6**模块与**CommonJS 模块区别？
 
@@ -170,7 +170,7 @@ Array.prototype.slice.call(arguments)
 
 1. var 声明的变量会挂载到window上，let和const不会
 2. var声明的变量存在变量提升，let和const不存在
-3. let和const声明会形成块级作用域
+3. let和const声明的变量会形成块级作用域
 4. 同一作用域下let和const不能重复声明同一个变量，而var可以
 5. const声明的变量是一个常量，且必须赋值，不能赋值为null,声明后不能被修改，如果声明的是复合类型数据，可以修改其属性。
 6. let和const存在暂时性死区,var不存在
@@ -377,5 +377,270 @@ window 对象含有 location 对象、navigator对象、screen对象等子对象
 4. 高阶组件
 5. 函数防抖与节流
 
-### 
+### 33.事件委托
+
+事件委托本质上是利用了事件冒泡机制。
+
+事件委托：将子元素监听事件委托为父元素执行，由父元素统一处理多个子元素的事件。
+
+事件委托的优点：
+
+减少了DOM绑定次数，减少内存消耗，提高性能。
+
+### 34.检测数据类型方法有哪些？
+
+检测方法有四种
+
+1. Object.prototype.toString.call()
+
+   作用：可以检测所有数据类型，而且非常准确
+
+   返回值：[object Xxx], Xxx 就是对象的类型
+
+2. constructor
+
+   作用：可以检测基本数据类型和引用数据类型
+
+   弊端：把类的原型进行重写，很有可能把之前的contructor覆盖,检测出来的结果就会不准确
+
+   返回值：true/false
+
+3. instanceOf
+
+​		作用：判断左边的对象是否是右边构造函数的实例
+
+​		原理：判断对象类型的原型链上是否能够找到右边构造函数的原型属性
+
+​		弊端：只能用于引用数据类型检测，基本数据类型不生效
+
+​		返回值：true/false
+
+4. typeof
+
+   作用：用于检测基本数据类型和函数
+
+   弊端：引用数据类型（Array/function/object）只会返回Object
+
+   返回值："string"/"boolean"/"object"
+
+### 35.promise/async&await
+
+Promise是es6新增的，异步编程的一种解决方案，用来取代回调函数和事件，比传统的解决方案（回调函数和事件） 更合理和更强大。
+
+**Promise有三种状态**：pedding(进行中)、fulfilled(resolve已成功)和rejected(已失败)
+
+**Promise的特点：**
+
+1. 对象不受外界所干扰，promise对象代表一个异步操作。
+2. 状态一旦设定，就不可在变，任何时候都可以得到这个结果。
+3. Promise对象的状态改变，只有两种可能：一种是从pedding变为resolved，另一种是pedding变为rejected。只要这两种情况发生了，状态就凝固了。
+
+**Promise的实例方法有:**
+
+1. Promise.prototype.then
+2. Promise.prototype.catch
+3. Promise.prototype.finally
+
+**Promise的静态方式：**
+
+1. Promise.all():用于将多个Promise实例，包装成一个新的Promise实例，接受一个数组作为参数，只有数组里面每个状态都变成resolve,则新的Promise实例才会变成resolve.
+2. Promise.race():将Promise对象数组中最先执行完成的内容通过then传出
+
+**async/await是什么？**
+
+async就是用来修饰函数，使函数异步执行，并且不妨碍后续函数的执行。async修饰的函数返回一个Promise对象，所有也有then,catch方法，并且await只能出现在async修饰的函数中。
+
+**async/await的优势是什么？**
+
+1. 使用async函数可以让代码简洁很多，不需要像Promise一样需要then传出，不需要写匿名函数处理Promise的resolve值，也不需要定义多余的data变量，还避免了嵌套代码。
+2. 使用async/await可以使用catch处理JSON.parse()的错误，而Promise是不可以的。
+3. 条件语句也和错误捕获是一样的，在 async 中也可以像平时一般使用条件语句一样处理。
+
+### 36.Generator
+
+ **Generator** 的中文名称是生成器，它是ECMAScript6中提供的新特性。
+
+在过去，封装一段运算逻辑的单元是函数。函数只存在“没有被调用”或者“被调用”的情况， 不存在一个函数被执行之后还能暂停的情况，而Generator的出现让这种情况成为可能。
+
+通过 function* 来定义的函数称之为“生成器函数”(generator function)，它的特点是可以中断函数的执行， 每次执行yield语句之后，函数即暂停执行，直到调用返回的生成器对象的next()函数它才会继续执行。
+
+**yield关键字**
+
+真正让Generator具有价值的是yield关键字，这个yield关键字让 Generator内部的逻辑能够切割成多个部分。发现函数执行到第一个yield关键字的时候就停止了。要让业务逻辑继续执行完，需要反复调用.next() 可以简单地理解为yield关键字将程序逻辑划分成几部分，每次.next()执行时执行一部分。 这使得程序的执行单元再也不是函数，复杂的逻辑可以通过yield来暂停。.next()调用时，返回一个对象，这个对象具备两个属性。 其中一个属性是布尔型的done。它表示这个Generator对象的逻辑块是否执行完成。 另一个属性是value，它来自于yield语句后的表达式的结果。通过.next()传递参数，可以赋值给yield关键字前面的变量声明。
+
+### 37.**深**/浅拷⻉及方法
+
+深/浅拷⻉针对的是引用类型
+
+**浅拷贝：**浅拷贝只复制某个对象的指针，而不复制对象本身，新旧对象还是共享一块内存空间。
+
+**浅拷贝的方法有哪些？**
+
+数组方法：slice截取、concat拼接、filter过滤、map映射、展开运算符等
+
+对象方法：Object.assign({},obj)、Object.create(obj)、展开运算符
+
+**深拷贝：**深拷贝会创建一个一模一样的对象，新对象与原对象不共享内存，修改新对象不会影响到原对象。
+
+**深拷贝的方法有哪些？**
+
+1. JSON.parse(JSON.stringify(obj)) 对象->字符串->对象
+
+   这个方式的弊端: 
+
+   * 如果obj里面有时间对象，则JSON.stringify后再JSON.parse的结果，时间将只是字符串的形式，而不是
+
+   对象的形式 
+
+   * 如果obj里有RegExp(正则表达式的缩写)、Error对象，则序列化的结果将只得到空对象; 
+   * 如果obj里有函数，undefined，则序列化的结果会把函数或 undefined丢失;
+
+   * 如果obj里有NaN、Infinity和-Infinity，则序列化的结果会变成null 
+   * JSON.stringify()只能序列化对象的可枚举的自有属性，不可枚举的不能被复制
+
+2. 原生实现（递归+浅拷贝）
+
+```javascript
+function deepCopy(newObj, oldObj) {
+    for (let key in oldObj) {
+        let value = oldObj[key];
+        // 1. 如果是数组
+        if (value instanceof Array) {
+            newObj[key] = [];
+            deepCopy(newObj[key],value);
+            // 2. 如果是对象(数组也是对象所有要写在前头)
+        }else if (value instanceof Object) {
+            newObj[key] = {};
+            deepCopy(newObj[key],value);
+            //3. 普通数据类型
+        }else {
+            newObj[key] = value;
+        }
+    }
+}
+let o = {};
+deepCopy(o,obj);
+console.log(o);
+```
+
+3. 工具实现【第三方封装库】
+
+   loadsh _.cloneDeep(obj)
+
+### 38.set和map的区别？
+
+**map**
+
+Map是一组键值对的结构，具有极快的查找速度。初始化Map需要一个二维数组，或者直接初始化一个空Map。
+Map 对象是键值对集合，和 JSON 对象类似，key 不仅可以是字符串还可以是其他各种类型的值包括对象都可以成为Map的键。
+
+**set**
+
+Set也是一组key的集合，与Map类似。但是区别是Set不存储value，并且它的key不能重复。创建一个Set，需要提供一个Array作为输入，或者直接创建一个空Set。**Set 对象类似于数组，且成员的值都是唯一的。**
+
+### 39.for/forEach/for...in/for...of的区别？
+
+for循环这种写法比较麻烦，因此数组提供内置的forEach方法。 
+
+forEach没有返回值，无法中途跳出forEach循环，break命令或return命令都不能奏效。
+
+for...in循环主要是为遍历对象而设计的，不适用于遍历数组。
+
+for...of循环相比上面几种做法，有一些显著的优点。 它有着同for...in一样的简洁语法，但是没有for...in那些缺点。 不同于forEach方法，它可以与break、continue和return配合使用。 提供了遍历所有数据结构的统一操作接口。
+
+### 40.宏任务和微任务
+
+因为js 是单线程执行的，js中的任务是按顺序一个一个执行，但是如果一个任务耗时太⻓，那么后面的任务就需要等待太久，为了解决这种情况，将任务分为了同步任务和异步任务，而异步任务又可以分为微任务和宏任务。
+
+概念：
+
+​	1. 宏任务:当前调用栈中执行的代码成为宏任务。(主代码快，定时器等等)。
+
+​	2. 微任务:当前(此次事件循环中)宏任务执行完，在下一个宏任务开始之前需要执行的任务,可以理解为回调事件。 (promise.then，proness.nextTick等等)。
+
+​	3. 宏任务中的事件放在callback queue中，由事件触发线程维护;微任务的事件放在微任务队列中，由js引擎线程维护。
+
+运行机制：
+
+1. 在执行栈中执行一个宏任务。
+2. 执行过程中遇到了微任务，将微任务添加到任务队列中。
+3. 当前宏任务执行完毕后，立即执行微任务队列的任务。
+4. 当前微任务队列的任务执行完毕，js线程接管，开启下一次宏任务（从事件队列中取）
+
+微任务：process.nextTick、MutationObserver、Promise.then catch finally
+
+宏任务：I/O、setTimeout、setInterval、setImmediate、requestAnimationFrame
+
+js执行顺序：先同步，再异步，在此基础上先宏任务再微任务。
+
+### 41.js异步操作有哪些？
+
+1. 定时器都是异步操作
+2. 事件绑定都是异步操作
+3. Ajax请求中一般都采取异步操作
+4. 回调函数可以理解为异步（不严谨的异步操作）
+5. Promise
+6. Generator (通过yield关键字可以让任务在需要的地方暂停,每一步的值可以通过next获取)
+7. async/await（await得到的就是async异步返回值,底层原理还是Promise中的resolve方法）
+
+8. 设计模式-发布订阅模式
+9. 事件监听
+
+### 42.Proxy
+
+Proxy用于修改某些操作的默认行为，在访问对象之前建立一道”拦截“，任何访问该对象的操作之前都会通过这道”拦截“，即执行Proxy里面定义的方法。
+
+```javascript
+let proxy = new Proxy(target,handler)
+```
+
+其中new Proxy相当于创建了一个Proxy实例，target为所要拦截的目标对象，handler也是一个对象，里面定义的是拦截对象所要进行的拦截方法。
+
+Proxy常用拦截方法有：
+
+get(target,name,property)方法：用于拦截某个读取属性的操作,第一个参数为目标对象，第二个参数为属性名称，第三个属性为操作所针对的对象(可选 参数)
+
+set(target,name,value,property)：用于拦截某个属性的赋值操作，第一个参数为目标对象，第二个参数为属性名，第三个参数为属性值，第四个参数为操作行为所针对的对象(可选参数)
+
+has(target,key)：用来拦截对象是否具有某个属性值的操作，第一个参数为目标对象，第二个参数为属性名
+
+### 43. 插入几万个 dom ，如何实现页面不卡顿？
+
+```javascript
+// 让创建插入节点的工作分批进行：
+setTimeout(()=>{
+	// 插入十万条数据
+  const total = 100000;
+  // 一次插入20条，如果觉得性能不好就减少
+  const once = 20;
+  // 渲染数据总共需要多少次
+  const loopCount = total / once;
+  let countOfRender = 0;
+  let ul = document.querySelector("ul");
+  function add() {
+    // 优化性能，插入不会造成回流
+    const fragment = document.createDocumentFragment();
+    for(let i=0;i<once;i++) {
+      const li = document.createElement("li");
+      li.innerText = Math.floor(Math.random*total);
+      fragment.appendChild(li);
+    }
+    ul.appendChild(fragment);
+    countOfRender += 1;
+    loop();
+  }
+  function loop() {
+    if (countOfRender < loopCount) {
+      window.requestAnimationFrame(add);
+    }
+  }
+  loop();
+},0)
+```
+
+### 44.数组扁平化
+
+### 45.数组排序
+
+### 46.数组去重
 
