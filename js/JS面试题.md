@@ -610,7 +610,7 @@ has(target,key)：用来拦截对象是否具有某个属性值的操作，第�
 // 让创建插入节点的工作分批进行：
 setTimeout(()=>{
 	// 插入十万条数据
-  const total = 100000;
+  const total = 100000
   // 一次插入20条，如果觉得性能不好就减少
   const once = 20;
   // 渲染数据总共需要多少次
@@ -621,26 +621,82 @@ setTimeout(()=>{
     // 优化性能，插入不会造成回流
     const fragment = document.createDocumentFragment();
     for(let i=0;i<once;i++) {
-      const li = document.createElement("li");
-      li.innerText = Math.floor(Math.random*total);
-      fragment.appendChild(li);
+      const li = document.createElement("li")
+      li.innerText = Math.floor(Math.random*total)
+      fragment.appendChild(li)
     }
     ul.appendChild(fragment);
-    countOfRender += 1;
-    loop();
+    countOfRender += 1
+    loop()
   }
   function loop() {
     if (countOfRender < loopCount) {
-      window.requestAnimationFrame(add);
+      window.requestAnimationFrame(add)
     }
   }
-  loop();
+  loop()
 },0)
 ```
 
 ### 44.数组扁平化
 
+1. reduce
+
+```javascript
+function flatten(arr) {
+  return arr.reduce((result,item)=> {
+  	return result.concat(Array.isArray(item)? flatten(item):item)
+  },[])
+}
+```
+
+2. toString & split
+
+```javascript
+// 调用数组的toString方法，将数组变为字符串然后再用split分割还原为数组
+function flatten(arr) {
+  return arr.toString().split(',').map(item=> {
+    return Number(item)
+  })
+}
+```
+
+3. Join & split
+
+```javascript
+function flatten(arr) {
+  return arr.join(',').split(',').map(item=> {
+    return parseInt(item)
+  })
+}
+```
+
+4. 递归
+
+```javascript
+// 递归的遍历每一项，若为数组则继续遍历，否则concat
+function flatten(arr) {
+  let arr = []
+  arr.map(item=> {
+    if(Array.isArray(item)) {
+      res = res.concat(fltten(item))
+    } else {
+      arr.push(item)
+    }
+  })
+  return arr
+}
+```
+
+5. Array.prototype.flat()
+
+```javascript
+console.log(arr.flat(Infinity))
+```
+
 ### 45.数组排序
 
 ### 46.数组去重
+
+### 47.xss**攻击和**csrf攻击是什么?
 
