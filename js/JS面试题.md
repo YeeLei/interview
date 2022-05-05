@@ -175,6 +175,16 @@ Array.prototype.slice.call(arguments)
 5. const声明的变量是一个常量，且必须赋值，不能赋值为null,声明后不能被修改，如果声明的是复合类型数据，可以修改其属性。
 6. let和const存在暂时性死区,var不存在
 
+如果希望const定义的对象的属性也不能被修改该怎么做？
+
+1. Object.freeze()
+
+   使用Object.freeze()冻结的对象中的现有属性值是不可变的。
+
+2. Object.seal()
+
+   Object.seal()方法封闭一个对象，阻止添加新属性并将所有现有属性标记为不可配置。当前属性的值只要原来是可写的就可以改变。
+
 ### 17.箭头函数
 
 1. 箭头函数表达式比函数表达式更简洁
@@ -195,10 +205,11 @@ Array.prototype.slice.call(arguments)
 ### 19.new操作符的过程
 
 1. 在内存中创建一个空对象
-2. 将空对象的__proto__指向到函数的prototype上
-
+2. 将空对象的__proto__指向到构造函数的prototype上
 3. 将新创建的对象作为this的上下文
 4. 如果该函数没有返回对象，则默认返回this
+
+https://www.cnblogs.com/renzhiwei2017/p/10364771.html
 
 ### 20.什么是回调函数？回调函数有什么缺点？
 
@@ -259,6 +270,18 @@ JavaScript不支持任何创建自定义类型的机制，而所有值最终都�
 
 引用数据类型:同时存储在栈(stack)和堆(heap)中，占据空间大、大小不固定。引用数据类型在栈中存储了指针（地址），该指针指向堆中该实体的起始地址。当解释器寻找引用值时，会首先检索其在栈中的地址，取得地址后从堆中获得实体。
 
+**如何判断一个数据是否是数组？**
+
+方法一：Object.prototype.toString.call(arr) === '[object Array]' 则arr为数组;
+
+方法二：Array.isArray(arr)  === true 则arr为数组; （API不存在时MDN上推荐使用方法一的原理创建PolyFill）
+
+方法三：arr instanceof Array === true 则arr为数组;
+
+方法四：arr.sort === Array.prototype.sort 则arr为数组;
+
+方法五：arr.constructor === Array 则arr为数组; 
+
 ### 24.js的数据类型的转换
 
  在 JS 中类型转换只有三种情况，分别是:
@@ -312,7 +335,7 @@ window 对象含有 location 对象、navigator对象、screen对象等子对象
 
 原型：js规定，每个函数都有一个prototype对象属性，指向另一个对象。prototype就是调用构造函数所创建的那个实例对象的原型。
 
-原型链：当访问一个对象的某个属性时，首先会从该对象的自己属性中查找，如果没有找到，就会从它的__proto__隐式原型上查找，即它的构造函数的原型prototype，如果还没有找到，就会去构造函数的prototype的__proto__中查找，这样一层一层的往上就会形成一条链式结构，我们称为原型链。
+原型链：当访问一个对象的某个属性时，首先会从该对象的自己属性中查找，如果没有找到，就会从它的__proto__隐式原型上查找，即它的构造函数的原型prototype，如果还没有找到，就会去构造函数的prototype的__proto__中查找，这样一层一层的往上就会形成一条链式结构，称为原型链。
 
 ### 30.prototype、proto、constructor三者的关系
 
@@ -427,7 +450,7 @@ window 对象含有 location 对象、navigator对象、screen对象等子对象
 
 Promise是es6新增的，异步编程的一种解决方案，用来取代回调函数和事件，比传统的解决方案（回调函数和事件） 更合理和更强大。
 
-**Promise有三种状态**：pedding(进行中)、fulfilled(resolve已成功)和rejected(已失败)
+**Promise有三种状态**：pedding(进行中)、fulfilled(resolved已成功)和rejected(已失败)
 
 **Promise的特点：**
 
@@ -528,7 +551,7 @@ console.log(o);
 
    loadsh _.cloneDeep(obj)
 
-### 38.Set和Map的区别？
+### 38.Set和Map的区别，Map和Object的区别？
 
 **Map**
 
@@ -538,6 +561,13 @@ Map 对象是键值对集合，和 JSON 对象类似，key 不仅可以是字符
 **Set**
 
 Set也是一组key的集合，与Map类似。但是区别是Set不存储value，并且它的key不能重复。创建一个Set，需要提供一个Array作为输入，或者直接创建一个空Set。**Set 对象类似于数组，且成员的值都是唯一的。**
+
+**Map和Object的区别？**
+
+1. map的键可以是任意的数据类型，包括基本的数据类型，对象以及函数，而object只允许使用symbol以及string
+2. map中的key是有序的，迭代的时候以其插入的顺序返回键值，而object的键是无序的
+3. map长度可以通过size方法来获取，而object需要手动计算(Object.keys(obj).length)
+4. map是可迭代的，object需要通过获取键来迭代
 
 ### 39.for/forEach/for...in/for...of的区别？
 
@@ -820,3 +850,17 @@ this指向：
 
 - http协议:每次http请求都需要创建一次tcp连接，通信只能由客户端发起，做不到服务器主动向客户端推送信息。
 - websocket协议: websocket是保持⻓连接，服务器可以主动向客户端推送信息，客户端也可以主动向服务器发送信息，是真正的双向平等对话，属于服务器推送技术的一种。
+
+### 54.堆与栈的区别？
+
+1、栈由系统自动分配，而堆是人为申请开辟；
+
+2、栈获得的空间较小，而堆获得的空间较大；
+
+3、栈由系统自动分配，速度较快，而堆一般速度比较慢；
+
+4、栈是连续的空间，而堆是不连续的空间。
+
+### 55.jQuery链式调用的原理分析
+
+jQuery在封装的时候把操作DOM的api函数封装并且放到了jQuery函数内部的原型对象上，并且封装的api函数都有一个返回值this,这个this指向的是jQuery的实例。

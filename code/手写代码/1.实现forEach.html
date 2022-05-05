@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+
+<script>
+  // forEach
+  // Array.prototype.forEach() 方法对数组的每个元素执行一次给定的函数。
+
+  Array.prototype._forEach = function (fn, thisArg) {
+    if (typeof fn !== 'function') throw '参数必须为函数'
+    if (!Array.isArray(this)) throw '只能对数组使用此方法'
+    let arr = this
+    for (let i = 0; i < arr.length; i++) {
+      fn.call(thisArg, arr[i], i, arr) //用call来改变fn里面this的指向
+    }
+  }
+
+  // test
+  window.value = 0
+  let obj = { value: 1 }
+  let arr = ['_', 'for', 'each']
+  arr._forEach(function (ele, index, arr) {
+    console.log('ele,index,arr', ele, index, arr)
+    console.log('this.value', this.value)
+  }, obj)
+</script>

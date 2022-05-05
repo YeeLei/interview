@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>手写Promise</title>
+    <script src="./MyPromise.js"></script>
+  </head>
+  <body></body>
+</html>
+<script>
+  let p = new MyPromise((resolve, reject) => {
+    resolve('解决')
+    // setTimeout(() => {
+    //   resolve('解决')
+    //   // reject('拒绝')
+    //   console.log('帅')
+    // }, 2000)
+    // reject('拒绝')
+  })
+    .then()
+    .then(
+      (value) => {
+        console.log(value)
+        return '叶磊'
+      },
+      (reason) => {
+        console.log('error')
+        console.log(reason)
+        return '失败'
+      }
+    )
+    .then(
+      (value) => {
+        console.log('success' + value)
+      },
+      (reason) => {
+        console.log(reason)
+      }
+    )
+  console.log('手写Promise')
+</script>

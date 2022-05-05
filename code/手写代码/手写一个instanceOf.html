@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+
+<script>
+  function instanceOf(left, right) {
+    let proto = left.__proto__
+    let prototype = right.prototype
+
+    while (true) {
+      if (proto === null) return false
+      if (proto === prototype) return true
+      proto = proto.__proto__
+    }
+  }
+
+  // test
+  console.log(instanceOf(123, String)) // false
+  console.log(instanceOf('123', String)) // true
+</script>

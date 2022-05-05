@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+<script>
+  // Array.prototype._reduce() 方法对数组中的每个元素执行一个由您提供的reducer函数(升序执行)，将其结果汇总为单个返回值。
+  // arr.reduce(callback(currentValue,index,[array]),initialValue)
+
+  Array.prototype._reduce = function (_reducer, initialValue) {
+    if (typeof _reducer !== 'function') throw '参数必须是回调函数'
+    if (!Array.isArray(this)) throw '只能对数组进行操作'
+    if (!this.length && !initialValue)
+      throw '请传入初始值或者给非空对象使用此方法'
+
+    let arr = this
+    let result = initialValue || arr[0] // 初始值
+    for (let i = 0; i < arr.length; i++) {
+      if (!initialValue && i == 0) continue // 如果提供了initialValue，则起始索引号为0，否则从索引1起始。
+      result = _reducer(result, arr[i], i, arr)
+    }
+    return result
+  }
+
+  // test
+  let arr = [1, 3, 4]
+  const Result = arr._reduce(function (
+    accumulator,
+    currentValue,
+    index,
+    array
+  ) {
+    console.log(index)
+    return accumulator + currentValue
+  },
+  2)
+  console.log(Result)
+</script>

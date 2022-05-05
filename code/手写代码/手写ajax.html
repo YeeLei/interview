@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+<script>
+  // 原生ajax实现
+  function $ajax(obj) {
+    // get方式传入时，将data进行内容拼接
+    function splicStr(data) {
+      var str = ''
+      for (var i in data) {
+        str = i + '=' + data[i]
+      }
+      return str
+    }
+    // 1.声明XMLHttpRequest对象
+    let xhr = XMLHttpRequest()
+    // 2.初始化参数
+    if (obj.method.toUpperCase() === 'GET') {
+      // get方法
+      xhr.open(
+        obj.method,
+        obj.url + '?' + splicStr(obj.data),
+        typeof obj.async === 'boolean' ? obj.async : true
+      ) // 拼接路径
+      xhr.send() // 3.发送请求
+    } else if (obj.method.toUpperCase() === 'POST') {
+      xhr.open(
+        obj.method,
+        obj.url,
+        typeof async === 'boolean' ? obj.async : true
+      )
+      xhr.setRequestHeader('content-type', 'application/x-www-urlencoded') // 以表单方式提交
+      xhr.send(obj.data)
+    }
+    // 4.监听发送
+    xhr.onreadyStateChange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        // success回调
+        success(xhr.responseText)
+      } else if (xhr.readyState === 4 && xhr.status !== 200) {
+        // error回调
+        error()
+      }
+    }
+  }
+
+  // test
+  $ajax({
+    url: '',
+    method: 'post',
+    async: true,
+    data: {
+      username: 'zhangsan',
+      pwd: 123,
+    },
+    success: function (data) {
+      console.log(data)
+    },
+    error: function () {
+      console.log('发生了错误')
+    },
+  })
+</script>

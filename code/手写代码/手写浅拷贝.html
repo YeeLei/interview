@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+<script>
+  function clone(target) {
+    if (target === null) {
+      return target
+    }
+    // 克隆数组或对象
+    let cloneTarget = Array.isArray(target) ? [] : {}
+    for (key in target) {
+      if (target.hasOwnProperty(key)) {
+        //判断是否是本身的属性
+        cloneTarget[key] = target[key]
+      }
+    }
+    return cloneTarget
+  }
+
+  // test
+  let obj = {
+    name: '张三',
+    arr: [1, 2],
+  }
+
+  let newObj = clone(obj)
+
+  obj.arr[0] = 0
+  console.log(newObj)
+  console.log(obj)
+</script>

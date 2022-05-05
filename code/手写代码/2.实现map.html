@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+<script>
+  // map
+  // Array.prototype.map() 方法创建一个新数组，其结果是该数组中的每个元素是调用一次提供的函数后的返回值。
+
+  Array.prototype._map = function (fn, thisArg) {
+    if (typeof fn !== 'function') throw '参数必须为回调函数'
+    if (!Array.isArray(this)) throw '只能为数组使用此方法'
+    const arr = this
+    const newarr = []
+
+    for (let i = 0; i < arr.length; i++) {
+      // 将每次调用的回调函数fn的返回值push到新数组中
+      newarr.push(fn.call(thisArg, arr[i], i, arr))
+    }
+    return newarr
+  }
+
+  // test
+  window.value = 0
+  let obj = { value: 1 }
+  let arr = ['_', 'for', 'each']
+  const newArr = arr._map(function (ele, index) {
+    console.log('this.value', this.value)
+    return ele + '你好' + index
+  }, obj)
+  console.log(newArr)
+</script>
