@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+<script>
+  Function.prototype.myCall = function (context) {
+    context = context || window //传入参数的话，就指定context为this指向，否则指定window
+    context.fn = this
+    const args = [...arguments].slice(1) //入参删除context
+    const result = context.fn(...args)
+    delete context.fn
+    return result
+  }
+  // test
+  let obj = {
+    name: 'Code程序人',
+  }
+  function fn(age, sex) {
+    console.log(this.name, age, sex)
+  }
+
+  fn.myCall(obj, '18', '男')
+</script>

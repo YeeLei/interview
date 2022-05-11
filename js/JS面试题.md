@@ -382,7 +382,7 @@ window 对象含有 location 对象、navigator对象、screen对象等子对象
 
 闭包的原理：
 
-闭包是定义在函数内部的函数，闭包是将函数内部和函数外部连接起来的一座桥梁。它打破了作用域链的规则，能够读取其他函数内部变量的函数。
+闭包：当一个内部函数被调用，就会形成闭包，闭包就是能够读取其他函数内部变量的函数。闭包将函数内部和函数外部连接起来的一座桥梁，它打破了作用域链的规则，能够读取其他函数内部变量的函数。
 
 优点：
 
@@ -525,26 +525,26 @@ async就是用来修饰函数，使函数异步执行，并且不妨碍后续函
 2. 原生实现（递归+浅拷贝）
 
 ```javascript
-function deepCopy(newObj, oldObj) {
-    for (let key in oldObj) {
-        let value = oldObj[key];
-        // 1. 如果是数组
-        if (value instanceof Array) {
-            newObj[key] = [];
-            deepCopy(newObj[key],value);
-            // 2. 如果是对象(数组也是对象所有要写在前头)
-        }else if (value instanceof Object) {
-            newObj[key] = {};
-            deepCopy(newObj[key],value);
-            //3. 普通数据类型
-        }else {
-            newObj[key] = value;
+function deepClone(obj){
+    //不是引用类型或为null时退出递归
+    if(typeof obj !== "object" || obj == null){
+        return obj;
+    }
+    //初始化新变量
+    let copy;
+    if(obj instanceof Array){
+        copy = [];
+    }else{
+        copy = {};
+    }
+    //深拷贝每一个元素
+    for(let key in obj){
+        if(obj.hasOwnProperty(key)){
+            copy[key] = deepClone(obj[key]);
         }
     }
+    return copy;
 }
-let o = {};
-deepCopy(o,obj);
-console.log(o);
 ```
 
 3. 工具实现【第三方封装库】
@@ -575,7 +575,7 @@ for循环这种写法比较麻烦，因此数组提供内置的forEach方法。
 
 forEach没有返回值，无法中途跳出forEach循环，break命令或return命令都不能奏效。
 
-for...in循环主要是为遍历对象而设计的，不适用于遍历数组。
+for...in循环主要是为遍历对象而设计的，不适用于遍历数组,性能非常差不推荐使用。
 
 for...of循环相比上面几种做法，有一些显著的优点。 它有着同for...in一样的简洁语法，但是没有for...in那些缺点。 不同于forEach方法，它可以与break、continue和return配合使用。 提供了遍历所有数据结构的统一操作接口。
 
@@ -729,7 +729,7 @@ console.log(arr.flat(Infinity))
 
 ### 46.数组去重
 
-### 47.xss**攻击和**csrf攻击是什么?
+### 47.xss攻击和csrf攻击是什么?
 
  **1、CSRF(Cross-site request forgery):跨站请求伪造。**
 
@@ -864,3 +864,166 @@ this指向：
 ### 55.jQuery链式调用的原理分析
 
 jQuery在封装的时候把操作DOM的api函数封装并且放到了jQuery函数内部的原型对象上，并且封装的api函数都有一个返回值this,这个this指向的是jQuery的实例。
+
+### 56.在地址栏里输入一个地址回车会发生哪些事情？
+
+1. 浏览器构建httpRequest请求，DNS解析url地址、生成http报文、构建tcp连接
+2. 使用相应的ip协议通过网络传输到服务器
+3. 服务器接受到httpResponse相应，响应客户端请求
+4. 将响应体的数据通过网络传输返回给客户端
+5. 浏览器解析服务端返回的html/css/js生成渲染树渲染页面
+
+### 57.tcp三次握手，四次挥手，可靠传输原理
+
+**tcp三次握手**
+
+* 第一次握手：客户端发送syn报文，发送seq为x的序列号给服务端，等待服务端的确认
+* 第二次握手：服务端发送syn+ack报文，并发送seq为y的序列号，在确认序列号为x+1
+* 第三次握手：客户端发送ack报文，并发送seq为z的序列号，在确认序列号为y+1
+
+第一次握手可以确认客服端的**发送能力**，第二次握手，确认了服务端的**发送能力和接收能力**，所以第三次握手才可以确认客户端的**接收能力**。不然容易出现丢包的现象。
+
+**四次挥手**
+
+* 第一次挥手：先客户端向服务器端发送一个FIN，请求关闭数据传输
+* 第二次挥手：当服务器接受到客户端的FIN，向客户端发送一个ACK，其中ACK值等于FIN+SEQ
+* 第三次挥手：然后服务器向客户端发送一个FIN，告诉客户端应用程序关闭。
+* 第四次挥手：当客户端收到服务器端的FIN时，回复一个ACK给服务器端。其中ack的值等于FIN+SEQ
+
+### 58.强缓存和协商缓存
+
+浏览器每次发起请求时，先在本地缓存中查找结果以及缓存标识，根据缓存标识来判断是否使用本地缓存, 如果缓存有效，则使用本地缓存。
+
+- 强缓存，服务器通知浏览器一个缓存时间，在缓存时间内，下次请求，直接用缓存，不在时间内，执行比较缓存策略。
+- 协商缓存，让客户端与服务器之间能实现缓存文件是否更新的验证、提升缓存的复用率， 将缓存信息中的Etag和Last-Modified,通过请求发送给服务器，由服务器校验，返回304状态码时，浏览器直接使用缓存。
+
+### 59.UDP和TCP有什么区别？
+
+![TCP和UDP的区别.png](fa800238f3bd4c8b9c6a2f309a720fb9~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp)
+
+### 60.说一下节流与防抖
+
+首先节流与防抖是在事件高频率触发时对性能的优化。
+
+防抖：在触发高频率事件n秒后，只会执行最后一次
+
+```js
+function debounce(fn，delay) {
+  var timer
+  return function () {
+    if(timer) {
+      clearTimeout(timer)
+    } 
+    timer = setTimeout(()=> {
+      fn.call(this,arguments)
+    },delay)
+  }
+}
+```
+
+节流：在触发高频率事件n秒内，只会执行一次
+
+```js
+function throttle(fn,delay) {
+  var before = 0
+  return function () {
+    var now = new Date().getTime()
+    if (now - before > delay) {
+      before = now
+      fn.call(this,arguments)
+    }
+  }
+}
+```
+
+### 61.数组转化成类数组的方法
+
+```js
+//通过call调用数组的slice方法来实现转换
+Array.prototype.slice.call(arrayLike)
+
+//通过call调用数组的splice方法来实现转换
+Array.prototype.splice.call(arrayLike,0)
+
+//通过apply调用数组的concat方法来实现转换
+Array.prototype.concat.apply([],arrayLike)
+
+//通过Array.from方法来实现转换
+Array.from(arrayLike)
+```
+
+### 62.说一下怎么取出数组最多的一项？
+
+```js
+const a = [1,2,3,3,2,2,3,12,33,12,12,33]
+  const obj = {}
+  //  采用键值对来存储，键表示该数字，值表示给数字出现次数
+  let maxNum = 0
+  a.forEach((item,index) => {
+    if(a.indexOf(item) === index){
+      obj[item] = 1
+    }else{
+      // eslint-disable-next-line operator-assignment
+      obj[item] = obj[item] + 1
+    }
+  })
+  // 找出谁是最大值
+  // eslint-disable-next-line no-restricted-syntax
+  for(const i in obj){
+    if(obj[i] > maxNum){
+      maxNum = obj[i]
+    }
+  }
+  // 根据最大值输出对应的数字
+  // eslint-disable-next-line no-restricted-syntax
+  for(const j in obj){
+    if(obj[j] === maxNum){
+      console.log('出现次数最多的数字为',j,' ,次数为',obj[j]);
+    }
+  }
+```
+
+### 63.http和https区别？
+
+1. https协议是需要CA证书的，而http协议不需要
+2. HTTP协议是超文本传输协议,信息是明文传输的,HTTPS则是具有安全性的SSL加密传输协议
+3. 使用不同的连接方式,端口也不同,HTTP协议端口是80,HTTPS协议端口是443
+4. HTTP协议连接很简单,是无状态的;HTTPS协议是具有SSL和HTTP协议构建的可进行加密传输、身份认证的网络协议,比HTTP更加安全
+
+### 64.说一下常见的HTTP状态码?说一下状态码是302和304是什么意思？你在项目中出现过么？你是怎么解决的？
+
+```js
+    <!-- 状态码：由3位数字组成，第一个数字定义了响应的类别 -->
+    <!-- 1xx：指示消息,表示请求已接收，继续处理 -->
+    <!-- 2xx：成功,表示请求已被成功接收，处理 -->
+    <!-- 200 OK：客户端请求成功
+         204 No Content：无内容。服务器成功处理，但未返回内容。一般用在只是客户端向服务器发送信息，而服务器不用向客户端返回什么信息的情况。不会刷新页面。
+         206 Partial Content：服务器已经完成了部分GET请求（客户端进行了范围请求）。响应报文中包含Content-Range指定范围的实体内容
+ -->
+    <!-- 3xx 重定向 -->
+    <!-- 301 Moved Permanently：永久重定向，表示请求的资源已经永久的搬到了其他位置。
+         302 Found：临时重定向，表示请求的资源临时搬到了其他位置
+         303 See Other：临时重定向，应使用GET定向获取请求资源。303功能与302一样，区别只是303明确客户端应该使用GET访问
+         307 Temporary Redirect：临时重定向，和302有着相同含义。POST不会变成GET
+         304 Not Modified：表示客户端发送附带条件的请求（GET方法请求报文中的IF…）时，条件不满足。返回304时，不包含任何响应主体。虽然304被划分在3XX，但和重定向一毛钱关系都没有
+ -->
+    <!-- 4xx：客户端错误 -->
+    <!-- 400 Bad Request：客户端请求有语法错误，服务器无法理解。
+         401 Unauthorized：请求未经授权，这个状态代码必须和WWW-Authenticate报头域一起使用。
+         403 Forbidden：服务器收到请求，但是拒绝提供服务
+         404 Not Found：请求资源不存在。比如，输入了错误的url
+         415 Unsupported media type：不支持的媒体类型
+ -->
+    <!-- 5xx：服务器端错误，服务器未能实现合法的请求。 -->
+    <!-- 500 Internal Server Error：服务器发生不可预期的错误。
+         503 Server Unavailable：服务器当前不能处理客户端的请求，一段时间后可能恢复正常，
+ -->
+```
+
+出现304主要是浏览器的协商缓存策略
+
+协商缓存就是强制缓存失效后，浏览器携带缓存标识向服务器发起请求，由服务器根据缓存标识决定是否使用缓存的过程，主要有以下两种情况：
+
+* 协商缓存生效，返回304和Not Modified
+
+* 协商缓存失效，返回200和请求结果

@@ -200,7 +200,7 @@ CSS属性 flex 规定了弹性元素如何伸长或缩短以适应flex容器中�
 
 * 标准盒模型:margin，border，padding，content
 
-​		 宽 = 左右border + 左右margin + 左有padding + content
+​		 宽 = 左右border + 左右margin + 左右padding + content
 
 * 怪异盒模型（IE盒模型）:border和padding算在宽高的里面
 
@@ -449,7 +449,9 @@ transition: css属性（默认all）花费时间 效果曲线（默认ease）延
 
    在响应式布局中，必须通过js来动态控制根元素`font-size`的大小，也就是说css样式和js代码有一定的耦合性，且必须将改变`font-size`的代码放在`css`样式之前。
 
-4. vw+rem
+4. vw
+
+5. vw+rem
 
 ### 10.三栏布局实现方案
 
