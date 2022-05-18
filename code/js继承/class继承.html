@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+<script>
+  /*
+    es6 class类继承
+
+  */
+
+  class Persion {
+    constructor() {
+      this.name = '小明'
+      this.eats = ['苹果']
+      this.getName = function () {
+        console.log(this.name)
+      }
+    }
+    show() {
+      console.log('Person.prototype上的方法')
+    }
+  }
+  class Student extends Persion {}
+
+  const stu1 = new Student()
+  stu1.name = '小花'
+  stu1.eats.push('香蕉')
+  console.log(stu1.name)
+  console.log(stu1.eats) // ['苹果','香蕉']
+  stu1.getName()
+  stu1.show() // stu1.show is not a function
+
+  console.log('--------------')
+  const stu2 = new Student()
+  console.log(stu2.name)
+  console.log(stu2.eats) // ['苹果']
+  stu2.getName()
+  stu2.show()
+</script>

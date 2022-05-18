@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+
+<script>
+  function add() {
+    var _args = Array.prototype.slice.call(arguments)
+
+    var fn = function () {
+      // 把参数都放在一个相当于全局变量的 _args 里面
+      _args.push(...arguments)
+      return fn
+    }
+
+    // toString具有隐式转换的特性
+    fn.toString = function () {
+      return _args.reduce(function (a, b) {
+        return a + b
+      }, 0)
+    }
+    return fn
+  }
+  console.log(+add(1, 2)) // 3
+  console.log(+add(1)(2)) // 3
+  console.log(+add(1)(2)(3)) // 6
+  console.log(+add(1, 2, 3)(4)) // 10
+</script>

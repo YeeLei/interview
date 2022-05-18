@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+<script>
+  // 发布者 -->商家
+  let shopObj = {}
+
+  // 商品列表 [key:[]], key为商品名
+  shopObj.list = []
+
+  // 订阅方法
+  shopObj.listen = function (key, fn) {
+    // key是商品型号, fn这个函数就是订阅的行为
+    if (!this.list[key]) {
+      this.list[key] = []
+    }
+    this.list[key].push(fn) // 往商品名为key的商品列表中添加订阅
+  }
+
+  //发布消息方法
+  shopObj.public = function (key) {
+    const fns = this.list[key]
+    for (let i = 0, fn; (fn = fns[i++]); ) {
+      fn.apply(this, arguments)
+    }
+  }
+</script>

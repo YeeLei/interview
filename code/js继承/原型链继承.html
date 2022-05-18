@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+<script>
+  /*
+    优点：父类方法可以复用
+    缺点：
+      1.父类所有的引用类型（对象、数组）会被子类共享，更改一个子类的数据，其他子类数据也会影响
+      2.子类实例不能给父类构造函数传参
+  */
+  function Persion() {
+    this.name = '小明'
+    this.eats = ['苹果']
+    this.getName = function () {
+      console.log(this.name)
+    }
+  }
+  Persion.prototype.show = function () {
+    console.log('Person.prototype上的方法')
+  }
+
+  function Student() {}
+  Student.prototype = new Persion()
+
+  const stu1 = new Student()
+  stu1.name = '小花'
+  stu1.eats.push('香蕉')
+  console.log(stu1.name)
+  console.log(stu1.eats) // ['苹果','香蕉']
+  stu1.getName()
+  stu1.show()
+
+  console.log('--------------')
+  const stu2 = new Student()
+  console.log(stu2.name)
+  console.log(stu2.eats) // ['苹果','香蕉']
+  stu2.getName()
+  stu2.show()
+</script>
