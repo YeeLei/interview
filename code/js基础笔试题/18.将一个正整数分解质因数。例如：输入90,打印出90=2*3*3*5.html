@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+<script>
+  // 将一个正整数分解质因数。例如：输入90,打印出90=2*3*3*5
+  var num = Number(prompt())
+  var str = ''
+  var sum = num
+  for (var a = 2; a <= num; a++) {
+    if (num % a === 0 && num !== a) {
+      str += a + '*'
+      num /= a
+      a--
+    } else if (num === a) {
+      str += a
+      break
+    }
+  }
+
+  document.write(sum + '=' + str)
+</script>

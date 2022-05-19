@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+<script>
+  // 写程序屏幕打印出a,b,c的值(100以内的正整数)：809*a=800*b+9*c+1。
+  for (let a = 1; a < 100; a++) {
+    for (let b = 1; b < 100; b++) {
+      for (let c = 1; c < 100; c++) {
+        if (809 * a === 800 * b + 9 * c + 1) {
+          console.log(a, b, c)
+        }
+      }
+    }
+  }
+</script>

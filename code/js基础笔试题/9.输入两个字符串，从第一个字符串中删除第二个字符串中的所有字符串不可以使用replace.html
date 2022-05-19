@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+<script>
+  // 输入两个字符串，从第一个字符串中删除第二个字符串中的所有字符串不可以使用replace
+  // 例如：输入“They are students” 和“aeiou”
+  // 则删除之后的第一个字符串变成 “Thy r stdnts”
+
+  let str1 = 'They are students'
+  let str2 = 'aeiou'
+  let arr = str1.split('')
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = 0; j < str2.length; j++) {
+      if (str2.charAt(j) === arr[i]) {
+        arr.splice(i, 1)
+      }
+    }
+  }
+  console.log(arr.join(''))
+</script>

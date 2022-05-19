@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+<script>
+  // 问题：计算字符串中某个字符的个数
+  // 例：计算’1231011211009181’中1的个数
+
+  function count(str, num) {
+    let count = 0
+    for (let i = 0; i < str.length; i++) {
+      if (str[i] == num) {
+        count++
+      }
+    }
+    return count
+  }
+  console.log(count('1231011211009181', 1))
+</script>

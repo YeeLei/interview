@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+<script>
+  // 一个n位数，判断它是不是回文数。即123321是回文数，个位与十万位相同，十位与万位相同，百位与千位相同
+  // 1.
+  // const isPalindrome = function (x) {
+  //   if (x < 0) return false
+  //   let str = '' + x
+  //   return Array.from(str).reverse().join('') === str
+  // }
+  // console.log(isPalindrome('123321'))
+
+  const isPalindrome = function (x) {
+    let str = x + ''
+    let newStr = ''
+    for (let i = str.length - 1; i >= 0; i--) {
+      newStr += str[i]
+    }
+    return str === newStr
+  }
+  console.log(isPalindrome('123321'))
+</script>
